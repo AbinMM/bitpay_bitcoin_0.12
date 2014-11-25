@@ -1,5 +1,11 @@
 all: $(LIBBITCOIND)
 
+leveldb_obj = \
+	$(subst .cc,.o,$(wildcard leveldb/table/*.cc)) \
+	$(subst .cc,.o,$(wildcard leveldb/util/*.cc)) \
+	$(subst .cc,.o,$(wildcard leveldb/port/*.cc)) \
+	$(subst .cc,.o,$(wildcard leveldb/helpers/memenv/memenv.cc))
+
 libbitcoind_obj = \
 	$(subst bitcoin-main.o,, \
 		$(subst bitcoin-cli.o,, \
@@ -25,6 +31,7 @@ version.o: version.cpp obj/build.h
 	  $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c $< -o $@
 
 $(LIBBITCOIND): $(LIBLEVELDB) $(LIBMEMENV) $(libbitcoind_obj)
-	$(CC) -shared -fPIC $(DEFS) $(CPPFLAGS) $(BITCOIN_CONFIG_INCLUDES) \
-	$(BITCOIN_INCLUDES) -o $@ $(BOOST_LIBS) $(BDB_LIBS) \
-	$(PROTOBUF_LIBS) $(SSL_LIBS) $(LIBS) $^
+	$(CC) -shared $(CXXFLAGS) $(CPPFLAGS) $(DEFS) $(LEVELDB_CPPFLAGS) \
+	$(BITCOIN_INCLUDES) $(BITCOIN_CONFIG_INCLUDES) -o $@ $(BOOST_LIBS) \
+	$(BDB_LIBS) $(PROTOBUF_LIBS) $(SSL_LIBS) $(LIBS) \
+	$(leveldb_obj) $(libbitcoind_obj)
