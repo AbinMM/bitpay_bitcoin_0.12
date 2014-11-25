@@ -1,10 +1,102 @@
 all: $(LIBBITCOIND)
 
 leveldb_obj = \
-	$(subst .cc,.o,$(wildcard leveldb/table/*.cc)) \
-	$(subst .cc,.o,$(wildcard leveldb/util/*.cc)) \
-	$(subst .cc,.o,$(wildcard leveldb/port/*.cc)) \
-	$(subst .cc,.o,$(wildcard leveldb/helpers/memenv/memenv.cc))
+	$(patsubst %test.o,,\
+	$(patsubst %bench.o,,\
+	$(subst leveldb/db/leveldb_main.o,,\
+	$(subst leveldb/util/testharness.o,,\
+	$(subst leveldb/util/testutil.o,,\
+	$(subst leveldb/port/port_win.o,,\
+		$(subst .cc,.o,$(wildcard leveldb/**/*.cc)) \
+		$(subst .cc,.o,$(wildcard leveldb/helpers/memenv/memenv.cc)) \
+	))))))
+
+leveldb_obj_all = \
+	$(patsubst %test.o,,\
+	$(patsubst %bench.o,,\
+	$(subst leveldb/db/leveldb_main.o,,\
+	$(subst leveldb/util/testharness.o,,\
+	$(subst leveldb/util/testutil.o,,\
+	$(subst leveldb/port/port_win.o,,\
+		$(subst .cc,.o,$(wildcard leveldb/db/*.cc)) \
+		$(subst .cc,.o,$(wildcard leveldb/table/*.cc)) \
+		$(subst .cc,.o,$(wildcard leveldb/util/*.cc)) \
+		$(subst .cc,.o,$(wildcard leveldb/port/*.cc)) \
+		$(subst .cc,.o,$(wildcard leveldb/helpers/memenv/memenv.cc)) \
+	))))))
+
+leveldb_obj_list = \
+	$(subst leveldb/db/corruption_test.o,,\
+	$(subst leveldb/db/dbformat_test.o,,\
+	$(subst leveldb/db/write_batch_test.o,,\
+	$(subst leveldb/db/leveldb_main.o,,\
+	$(subst leveldb/db/version_edit_test.o,,\
+	$(subst leveldb/db/db_test.o,,\
+	$(subst leveldb/db/version_set_test.o,,\
+	$(subst leveldb/db/log_test.o,,\
+	$(subst leveldb/db/db_bench.o,,\
+	$(subst leveldb/db/autocompact_test.o,,\
+	$(subst leveldb/db/skiplist_test.o,,\
+	$(subst leveldb/db/filename_test.o,,\
+	$(subst leveldb/table/filter_block_test.o,,\
+	$(subst leveldb/table/table_test.o,,\
+	$(subst leveldb/util/bloom_test.o,,\
+	$(subst leveldb/util/arena_test.o,,\
+	$(subst leveldb/util/crc32c_test.o,,\
+	$(subst leveldb/util/env_test.o,,\
+	$(subst leveldb/util/coding_test.o,,\
+	$(subst leveldb/util/testharness.o,,\
+	$(subst leveldb/util/testutil.o,,\
+	$(subst leveldb/util/cache_test.o,,\
+	$(subst leveldb/port/port_win.o,,\
+		$(subst .cc,.o,$(wildcard leveldb/db/*.cc)) \
+		$(subst .cc,.o,$(wildcard leveldb/table/*.cc)) \
+		$(subst .cc,.o,$(wildcard leveldb/util/*.cc)) \
+		$(subst .cc,.o,$(wildcard leveldb/port/*.cc)) \
+		$(subst .cc,.o,$(wildcard leveldb/helpers/memenv/memenv.cc)) \
+	)))))))))))))))))))))))
+
+leveldb_obj_old = \
+	leveldb/db/builder.o \
+	leveldb/db/c.o \
+	leveldb/db/dbformat.o \
+	leveldb/db/db_impl.o \
+	leveldb/db/db_iter.o \
+	leveldb/db/filename.o \
+	leveldb/db/log_reader.o \
+	leveldb/db/log_writer.o \
+	leveldb/db/memtable.o \
+	leveldb/db/repair.o \
+	leveldb/db/table_cache.o \
+	leveldb/db/version_edit.o \
+	leveldb/db/version_set.o \
+	leveldb/db/write_batch.o \
+	leveldb/table/block_builder.o \
+	leveldb/table/block.o \
+	leveldb/table/filter_block.o \
+	leveldb/table/format.o \
+	leveldb/table/iterator.o \
+	leveldb/table/merger.o \
+	leveldb/table/table_builder.o \
+	leveldb/table/table.o \
+	leveldb/table/two_level_iterator.o \
+	leveldb/util/arena.o \
+	leveldb/util/bloom.o \
+	leveldb/util/cache.o \
+	leveldb/util/coding.o \
+	leveldb/util/comparator.o \
+	leveldb/util/crc32c.o \
+	leveldb/util/env.o \
+	leveldb/util/env_posix.o \
+	leveldb/util/env_win.o \
+	leveldb/util/filter_policy.o \
+	leveldb/util/hash.o \
+	leveldb/util/histogram.o \
+	leveldb/util/logging.o \
+	leveldb/util/options.o \
+	leveldb/util/status.o \
+	leveldb/port/port_posix.o \
+	leveldb/helpers/memenv/memenv.o
 
 libbitcoind_obj = \
 	$(subst bitcoin-main.o,, \
