@@ -10,6 +10,9 @@
 #include "serialize.h"
 #include "uint256.h"
 
+const uint32_t BIP_009_MASK = 0x20000000;
+const uint32_t ADAPTIVE_BLOCK_SIZE_MASK = 0x08000000;  // Vote for adaptive block size
+
 /** Nodes collect new transactions into a block, hash them into a hash tree,
  * and scan through nonce values to make the block's hash satisfy proof-of-work
  * requirements.  When they solve the proof-of-work, they broadcast the block
@@ -21,6 +24,7 @@ class CBlockHeader
 {
 public:
     // header
+    static const int32_t CURRENT_VERSION=(BIP_009_MASK | ADAPTIVE_BLOCK_SIZE_MASK | 4); //4 is the latest block version at the time of this patch
     int32_t nVersion;
     uint256 hashPrevBlock;
     uint256 hashMerkleRoot;

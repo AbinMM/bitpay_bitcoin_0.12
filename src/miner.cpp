@@ -93,8 +93,18 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 
     // Largest block you're willing to create:
     unsigned int nBlockMaxSize = GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE);
-    // Limit to between 1K and MAX_BLOCK_SIZE-1K for sanity:
-    nBlockMaxSize = std::max((unsigned int)1000, std::min((unsigned int)(MAX_BLOCK_SIZE-1000), nBlockMaxSize));
+
+    // Check if miner wants to scale the mined/created block size when the max block size changes
+    unsigned int fScaleBlockSizeOptions = GetArg("-scaleblocksizeoptions", DEFAULT_SCALE_BLOCK_SIZE_OPTIONS);
+    unsigned int nMaxCreatedBlockSize = OLD_MAX_BLOCK_SIZE;
+    if (fScaleBlockSizeOptions) {
+    	unsigned int nBlockSizeDiff = OLD_MAX_BLOCK_SIZE - maxBlockSize;
+    	assert(nBlockSizeDiff >= 0);
+    	nMaxCreatedBlockSize = maxBlockSize;
+    	nBlockMaxSize = nBlockMaxSize + nBlockSizeDiff;
+    }
+    // Limit to between 1K and (maxBlockSize or MAX_BLOCK_SIZE)-1K for sanity:
+    nBlockMaxSize = std::max((unsigned int)1000, std::min((unsigned int)(nMaxCreatedBlockSize-1000), nBlockMaxSize));
 
     // How much of the block should be dedicated to high-priority transactions,
     // included regardless of the fees they pay
@@ -225,8 +235,8 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
                 continue;
 
             unsigned int nTxSigOps = iter->GetSigOpCount();
-            if (nBlockSigOps + nTxSigOps >= MAX_BLOCK_SIGOPS) {
-                if (nBlockSigOps > MAX_BLOCK_SIGOPS - 2) {
+            if (nBlockSigOps + nTxSigOps >= maxBlockSigops) {
+                if (nBlockSigOps > maxBlockSigops - 2) {
                     break;
                 }
                 continue;
