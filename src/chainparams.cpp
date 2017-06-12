@@ -180,7 +180,7 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 210000;
-        consensus.BIP34Height = 10000000;
+        consensus.BIP34Height = 21000;
         consensus.BIP34Hash = uint256S("0x00000000fb7c0a2aeb5f1244e81921b84b7ac770004543144e10c2284f89bfd8");
         consensus.BIP65Height = 10001; // 00000000fb7c0a2aeb5f1244e81921b84b7ac770004543144e10c2284f89bfd8
         consensus.BIP66Height = 10001; // 00000000fb7c0a2aeb5f1244e81921b84b7ac770004543144e10c2284f89bfd8
