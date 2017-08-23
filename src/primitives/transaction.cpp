@@ -141,7 +141,22 @@ std::string CTransaction::ToString() const
     return str;
 }
 
+bool CTransaction::ReplayProtected() const
+{
+    // hex("RP=!>1x") = 52503d213e3178
+    static const CScript noReplay =
+        CScript() << OP_RETURN << ParseHex("52503d213e3178");
+
+    for (const auto& txout : this->vout) {
+        if (txout.scriptPubKey == noReplay) {
+            return true;
+        }
+    }
+    return false;
+}
+
 int64_t GetTransactionWeight(const CTransaction& tx)
 {
     return ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) * (WITNESS_SCALE_FACTOR -1) + ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
 }
+
