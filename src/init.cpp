@@ -72,6 +72,7 @@ static const bool DEFAULT_REST_ENABLE = false;
 static const bool DEFAULT_DISABLE_SAFEMODE = false;
 static const bool DEFAULT_STOPAFTERBLOCKIMPORT = false;
 static const bool DEFAULT_PREFPEERING = true;
+static const bool DEFAULT_ADVERTISE_2X = true;
 
 std::unique_ptr<CConnman> g_connman;
 std::unique_ptr<PeerLogicValidation> peerLogic;
@@ -488,6 +489,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-datacarrier", strprintf(_("Relay and mine data carrier transactions (default: %u)"), DEFAULT_ACCEPT_DATACARRIER));
     strUsage += HelpMessageOpt("-datacarriersize", strprintf(_("Maximum size of data in data carrier transactions we relay and mine (default: %u)"), MAX_OP_RETURN_RELAY));
     strUsage += HelpMessageOpt("-prefpeering", strprintf(_("Preferential peering with segwit2x (and segwit) nodes (default: %u)"), DEFAULT_PREFPEERING));
+    strUsage += HelpMessageOpt("-advertise2x", strprintf(_("Advertise on network as a segwit2x-compatible node (default: %u)"), DEFAULT_ADVERTISE_2X));
     strUsage += HelpMessageOpt("-mempoolreplacement", strprintf(_("Enable transaction replacement in the memory pool (default: %u)"), DEFAULT_ENABLE_REPLACEMENT));
     strUsage += HelpMessageOpt("-minrelaytxfee=<amt>", strprintf(_("Fees (in %s/kB) smaller than this are considered zero fee for relaying, mining and transaction creation (default: %s)"),
         CURRENCY_UNIT, FormatMoney(DEFAULT_MIN_RELAY_TX_FEE)));
@@ -1079,7 +1081,8 @@ bool AppInitParameterInteraction()
     nMaxDatacarrierBytes = gArgs.GetArg("-datacarriersize", nMaxDatacarrierBytes);
 
     // Advertise as segwit2x node
-    nLocalServices = ServiceFlags(nLocalServices | NODE_SEGWIT2X);
+    if (gArgs.GetBoolArg("-advertise2x", DEFAULT_ADVERTISE_2X))
+        nLocalServices = ServiceFlags(nLocalServices | NODE_SEGWIT2X);
 
     // Prefer peers with compatible rulesets
     if (gArgs.GetBoolArg("-prefpeering", DEFAULT_PREFPEERING)) {
