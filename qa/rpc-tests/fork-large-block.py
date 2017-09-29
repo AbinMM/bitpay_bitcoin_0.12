@@ -191,7 +191,8 @@ class ForkLargeBlockTest(BitcoinTestFramework):
 
         large_tx = [self.create_tx(t, 0, 1, length=500000) for t in spend_tx_large]
 
-        noreplay_tx = self.create_tx(spend_tx_extra[0], 0, 0, CScript([OP_RETURN, b'RP=!>1x']))
+		# P2SH: 3No2xBD2uteCaTNGLpFkyoin4ctgeGMRLs
+        noreplay_tx = self.create_tx(spend_tx_extra[0], 0, 0, CScript([OP_HASH160, FromHex("e77dfed888d33a87c2f48849f54dc55f4e63e7b4"), OP_EQUAL]))
 
         self.generate_blocks(997, 4)
 
