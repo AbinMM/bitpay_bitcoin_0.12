@@ -157,11 +157,6 @@ bool IsStandardTx(const CTransaction& tx, std::string& reason, const bool witnes
         return false;
     }
 
-    if (tx.ReplayProtected()) {
-        reason = "replay-protected";
-        return false;
-    }
-
     return true;
 }
 
