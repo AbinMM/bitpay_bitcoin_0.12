@@ -27,13 +27,9 @@ information or see https://opensource.org/licenses/MIT.
 Development Process
 -------------------
 
-<<<<<<< HEAD
 The `segwit2x` branch is regularly built and tested, but is not guaranteed to be
-=======
-The `master` branch is regularly built and tested, but is not guaranteed to be
->>>>>>> 385cbc9... Update README to link to segwit2x site.
 completely stable. [Tags](https://github.com/btc1/bitcoin/tags) are created
-regularly to indicate new official, stable release versions of Bitcoin Core.
+regularly to indicate new official, stable release versions of btc1 Core.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
 
