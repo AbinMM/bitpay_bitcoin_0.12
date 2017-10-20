@@ -19,7 +19,7 @@ mine 29 blocks signalling readiness and 19 blocks not signalling readiness for B
 bit 1 is optional for the following 48 blocks when BIP91 is LOCKED_IN (LOCKED_IN->ACTIVE)
 bit 1 is mandatory for the following 144 blocks until BIP141 is locked_in
 bit 1 is optional after BIP141 is locked_in
-mine 1007 blocks accept all blocks size next block required to be greater than 1 Mb
+mine 1007 blocks accept all blocks size next block is not required to be greater than 1 Mb
 '''
 
 class ForkLargeBlockTest(BitcoinTestFramework):
@@ -194,9 +194,7 @@ class ForkLargeBlockTest(BitcoinTestFramework):
 
         assert_equal(self.height, 1583)
 
-        self.generate_blocks(1, 4, "bad-blk-length-toosmall") # block too small
-
-        self.generate_blocks(1, 4, txs=[large_tx[1], large_tx[2], large_tx[3]]) # mandatory large block
+        self.generate_blocks(1, 4, txs=[large_tx[1]]) # small block after fork is ok, "must be big" disabled
 
         assert_equal(self.height, 1584)
 
